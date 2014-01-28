@@ -88,9 +88,6 @@ public class TimelineActivity extends Activity {
 	  		    		Log.d("DEBUG", "got failure messgage: " + arg1);
 						super.handleFailureMessage(arg0, arg1);
 					}
-					
-					
-	  		    	
 	  		    });
 	  		    fetchHomeTimeline();
 	    	  }
