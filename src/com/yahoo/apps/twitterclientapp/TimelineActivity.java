@@ -69,12 +69,9 @@ public class TimelineActivity extends Activity {
 
 	  		    	  
 	  		    	@Override
-	  		    	public void onSuccess(JSONArray jsonTweet) {
+	  		    	public void onSuccess(JSONObject jsonTweet) {
 	  		    		Log.d("DEBUG", "got on success");
-//	  		    		ArrayList<Tweet> tweets = Tweet.fromJson(jsonTweets);
-//	  		    		ListView lv = (ListView) findViewById(R.id.lvTweets);
-//	  		    		TweetsAdapter twAdapter = new TweetsAdapter(getBaseContext(), tweets);
-//	  		    		lv.setAdapter(twAdapter);
+	  		    		fetchHomeTimeline();
 	  		    	}
 
 					@Override
@@ -89,7 +86,6 @@ public class TimelineActivity extends Activity {
 						super.handleFailureMessage(arg0, arg1);
 					}
 	  		    });
-	  		    fetchHomeTimeline();
 	    	  }
 	    	  
 	      }
