@@ -1,18 +1,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/actReload"
-        android:icon="@drawable/ic_action_reload"
-        android:onClick="onReload"
-        android:showAsAction="ifRoom"
+        android:id="@+id/actCompose"
+        android:icon="@drawable/ic_action_compose"
+        android:onClick="onCompose"
+        android:showAsAction="always"
         android:title="@string/action_bar">
     </item>
     
     <item
-        android:id="@+id/actCompose"
-        android:icon="@drawable/ic_action_compose"
-        android:onClick="onCompose"
-        android:showAsAction="ifRoom"
+        android:id="@+id/actProfile"
+        android:icon="@drawable/ic_action_name"
+        android:onClick="onProfile"
+        android:showAsAction="always"
+        android:title="@string/action_bar">
+    </item>
+    
+    <item
+        android:id="@+id/actReload"
+        android:icon="@drawable/ic_action_reload"
+        android:onClick="onReload"
+        android:showAsAction="always"
         android:title="@string/action_bar">
     </item>
     

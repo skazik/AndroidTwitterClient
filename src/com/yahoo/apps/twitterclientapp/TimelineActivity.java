@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 public class TimelineActivity extends Activity {
 	private final int COMPOSE_REQUEST = 20;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,65 +33,70 @@ public class TimelineActivity extends Activity {
 		getMenuInflater().inflate(R.menu.timeline, menu);
 		return true;
 	}
-	
-	private void fetchHomeTimeline() {
-		TwitterClientApp.getRestClient().getHomeTimeline(new JsonHttpResponseHandler() {
 
-			@Override
-			public void onSuccess(JSONArray jsonTweets) {
-				ArrayList<Tweet> tweets = Tweet.fromJson(jsonTweets);
-				ListView lv = (ListView) findViewById(R.id.lvTweets);
-				TweetsAdapter twAdapter = new TweetsAdapter(getBaseContext(), tweets);
-				lv.setAdapter(twAdapter);
-			}
-		});
+	private void fetchHomeTimeline() {
+		TwitterClientApp.getRestClient().getHomeTimeline(
+				new JsonHttpResponseHandler() {
+
+					@Override
+					public void onSuccess(JSONArray jsonTweets) {
+						ArrayList<Tweet> tweets = Tweet.fromJson(jsonTweets);
+						ListView lv = (ListView) findViewById(R.id.lvTweets);
+						TweetsAdapter twAdapter = new TweetsAdapter(
+								getBaseContext(), tweets);
+						lv.setAdapter(twAdapter);
+					}
+				});
 	}
 
 	public void onReload(MenuItem mi) {
 		Toast.makeText(this, "Refreshing...", Toast.LENGTH_SHORT).show();
 		fetchHomeTimeline();
 	}
-	
+
 	public void onCompose(MenuItem mi) {
 		// Toast.makeText(this, "Composing...", Toast.LENGTH_SHORT).show();
-    	Intent i = new Intent(this, ComposeActivity.class);
-    	// i.putExtra("title", "TO DO");
-    	startActivityForResult(i, COMPOSE_REQUEST);
+		Intent i = new Intent(this, ComposeActivity.class);
+		// i.putExtra("title", "TO DO");
+		startActivityForResult(i, COMPOSE_REQUEST);
+	}
+
+	public void onProfile(MenuItem mi) {
+		Intent i = new Intent(this, ProfileActivity.class);
+		startActivity(i);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	      if (resultCode == RESULT_OK && requestCode == COMPOSE_REQUEST) {
-	    	  String tweet = data.getStringExtra("tweet");
-	    	  if (tweet.length() > 0) {
-	    		  Toast.makeText(this, "got tweet " + tweet.toString(), Toast.LENGTH_SHORT).show();
-	  		      TwitterClientApp.getRestClient().postTweet(tweet, new JsonHttpResponseHandler() {
+		if (resultCode == RESULT_OK && requestCode == COMPOSE_REQUEST) {
+			String tweet = data.getStringExtra("tweet");
+			if (tweet.length() > 0) {
+				// Toast.makeText(this, "got tweet " + tweet.toString(), Toast.LENGTH_SHORT).show();
+				TwitterClientApp.getRestClient().postTweet(tweet,
+						new JsonHttpResponseHandler() {
 
-	  		    	  
-	  		    	@Override
-	  		    	public void onSuccess(JSONObject jsonTweet) {
-	  		    		Log.d("DEBUG", "got on success");
-	  		    		fetchHomeTimeline();
-	  		    	}
+							@Override
+							public void onSuccess(JSONObject jsonTweet) {
+								Log.d("DEBUG", "got on success");
+								fetchHomeTimeline();
+							}
 
-					@Override
-					public void onFailure(Throwable arg0, JSONArray arg1) {
-	  		    		Log.d("DEBUG", "got on failure");
-						super.onFailure(arg0, arg1);
-					}
+							@Override
+							public void onFailure(Throwable arg0, JSONArray arg1) {
+								Log.d("DEBUG", "got on failure");
+								super.onFailure(arg0, arg1);
+							}
 
-					@Override
-					protected void handleFailureMessage(Throwable arg0, String arg1) {
-	  		    		Log.d("DEBUG", "got failure messgage: " + arg1);
-						super.handleFailureMessage(arg0, arg1);
-					}
-	  		    });
-	    	  }
-	    	  
-	      }
+							@Override
+							protected void handleFailureMessage(Throwable arg0,
+									String arg1) {
+								Log.d("DEBUG", "got failure messgage: " + arg1);
+								super.handleFailureMessage(arg0, arg1);
+							}
+						});
+			}
+
+		}
 	}
-	
-	
-	
 
 }
