@@ -11,6 +11,10 @@ public class User extends BaseModel {
 		return getLong("id");
 	}
 	
+	public String getIdStr() {
+		return getString("id_str");
+	}
+	
 	public String getScreenName() {
 		return getString("screen_name");
 	}
@@ -28,7 +32,7 @@ public class User extends BaseModel {
 	}
 	
 	public int getFollowersCount() {
-		return getInt("friends_count");
+		return getInt("followers_count");
 	}
 	
 	public static User fromJson(JSONObject json) {
@@ -39,6 +43,14 @@ public class User extends BaseModel {
 			e.printStackTrace();
 		}
 		return u;
+	}
+
+	public int getFriendsCount() {
+		return getInt("friends_count");
+	}
+
+	public CharSequence getTagline() {
+		return getString("description");
 	}
 	
 }

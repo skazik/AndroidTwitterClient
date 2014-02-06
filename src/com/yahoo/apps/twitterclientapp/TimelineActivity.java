@@ -1,30 +1,34 @@
 package com.yahoo.apps.twitterclientapp;
 
-import java.util.ArrayList;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.yahoo.apps.twitterclientapp.models.Tweet;
+import com.yahoo.apps.twitterclientapp.fragments.HomeTimelineFragment;
+import com.yahoo.apps.twitterclientapp.fragments.MentionsFragment;
+import com.yahoo.apps.twitterclientapp.fragments.TweetsListFragment;
 
 import android.os.Bundle;
-import android.app.Activity;
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.ActionBar.TabListener;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.Toast;
 
-public class TimelineActivity extends Activity {
+public class TimelineActivity extends FragmentActivity implements TabListener {
 	private final int COMPOSE_REQUEST = 20;
+	TweetsListFragment fragmentTweets;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timeline);
-		fetchHomeTimeline();
+		setNavTabs();
 	}
 
 	@Override
@@ -34,23 +38,40 @@ public class TimelineActivity extends Activity {
 		return true;
 	}
 
-	private void fetchHomeTimeline() {
-		TwitterClientApp.getRestClient().getHomeTimeline(
-				new JsonHttpResponseHandler() {
+	private void setNavTabs() {
+		ActionBar ab = getActionBar();
+		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		ab.setDisplayShowTitleEnabled(true);
+		Tab tabHome = ab.newTab().setText("Home");
+		tabHome.setIcon(R.drawable.ic_action_home);
+		tabHome.setTag("HomeTimelineFragment");
+		tabHome.setTabListener(this);
+		Tab tabMentions = ab.newTab().setText("Mentions")
+				.setIcon(R.drawable.ic_action_mentions)
+				.setTag("MentionsFragment").setTabListener(this);
+		ab.addTab(tabHome, 0, true); // set selected
+		ab.addTab(tabMentions, 1, false);
+		// other ways ? :
+		// tabHome.select();
+		// ab.selectTab(tabHome);
 
-					@Override
-					public void onSuccess(JSONArray jsonTweets) {
-						ArrayList<Tweet> tweets = Tweet.fromJson(jsonTweets);
-						ListView lv = (ListView) findViewById(R.id.lvTweets);
-						TweetsAdapter twAdapter = new TweetsAdapter(
-								getBaseContext(), tweets);
-						lv.setAdapter(twAdapter);
-					}
-				});
+	}
+
+	private void fetchMentions() {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.flContainer, new MentionsFragment());
+		ft.commit();
+	}
+
+	private void fetchHomeTimeline() {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.flContainer, new HomeTimelineFragment());
+		ft.commit();
 	}
 
 	public void onReload(MenuItem mi) {
-		Toast.makeText(this, "Refreshing...", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Refreshing Home Timeline...", Toast.LENGTH_SHORT).show();
+		getActionBar().selectTab(getActionBar().getTabAt(0));
 		fetchHomeTimeline();
 	}
 
@@ -71,14 +92,15 @@ public class TimelineActivity extends Activity {
 		if (resultCode == RESULT_OK && requestCode == COMPOSE_REQUEST) {
 			String tweet = data.getStringExtra("tweet");
 			if (tweet.length() > 0) {
-				// Toast.makeText(this, "got tweet " + tweet.toString(), Toast.LENGTH_SHORT).show();
+				// Toast.makeText(this, "got tweet " + tweet.toString(),
+				// Toast.LENGTH_SHORT).show();
 				TwitterClientApp.getRestClient().postTweet(tweet,
 						new JsonHttpResponseHandler() {
 
 							@Override
 							public void onSuccess(JSONObject jsonTweet) {
 								Log.d("DEBUG", "got on success");
-								fetchHomeTimeline();
+								onReload(null);
 							}
 
 							@Override
@@ -97,6 +119,25 @@ public class TimelineActivity extends Activity {
 			}
 
 		}
+	}
+
+	@Override
+	public void onTabReselected(Tab arg0, android.app.FragmentTransaction arg1) {
+		onTabSelected(arg0, arg1);
+	}
+
+	@Override
+	public void onTabSelected(Tab arg0, android.app.FragmentTransaction arg1) {
+		if (arg0.getTag().toString().equalsIgnoreCase("HomeTimelineFragment")) {
+			fetchHomeTimeline();
+		} else {
+			fetchMentions();
+		}
+	}
+
+	@Override
+	public void onTabUnselected(Tab arg0, android.app.FragmentTransaction arg1) {
+
 	}
 
 }

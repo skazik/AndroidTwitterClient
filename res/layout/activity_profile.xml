@@ -8,4 +8,74 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ProfileActivity" >
 
+    <RelativeLayout
+        android:id="@+id/rlHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
+        
+        <ImageView 
+	        android:id="@+id/ivProfile"
+	        android:contentDescription="@string/profile_name"
+	        android:layout_width="72dp"
+	        android:layout_height="72dp"
+	        android:layout_alignParentLeft="true"
+    	    android:layout_alignParentTop="true"
+	        android:layout_marginRight = "10dp" 
+	        android:src="@android:drawable/screen_background_light_transparent"/>
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/ivProfile"
+            android:text="@string/profile_name"
+            android:textSize="16sp" />
+        
+        <TextView
+            android:id="@+id/tvTagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tvName"
+            android:layout_below="@+id/tvName"
+            android:text="@string/profile_tagline"
+            android:textSize="12sp" />
+        
+	</RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/llBody"
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="horizontal"
+        android:layout_below="@+id/rlHeader" 
+        android:layout_marginBottom = "15dp">
+    
+	    <TextView
+	        android:id="@+id/tvFlws"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" 
+	        android:text="@string/profile_fls" />
+	        
+	    <TextView
+	        android:id="@+id/tvFling"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft = "20dp"
+	        android:text="@string/profile_fling" />
+        
+    </LinearLayout>
+    
+    <fragment
+        android:id="@+id/frProfile"
+        android:name="com.yahoo.apps.twitterclientapp.fragments.ProfileFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llBody"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        tools:layout="@layout/fragment_tweets_list" />
+
+    
 </RelativeLayout>

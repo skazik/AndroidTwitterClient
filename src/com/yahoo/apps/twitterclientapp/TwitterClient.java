@@ -4,7 +4,6 @@ import org.scribe.builder.api.Api;
 import org.scribe.builder.api.TwitterApi;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 
 import com.codepath.oauth.OAuthBaseClient;
@@ -39,6 +38,11 @@ public class TwitterClient extends OAuthBaseClient {
 		client.get(url, null, handler);
 	}
     
+    public void getMentions(AsyncHttpResponseHandler handler) {
+		String url = getApiUrl("statuses/mentions_timeline.json");
+		client.get(url, null, handler);
+	}
+    
     public void postTweet(String tweet, AsyncHttpResponseHandler handler) {
     	Log.d("DEBUG", "postTweet: "+ tweet);
     	String url = getApiUrl("statuses/update.json");
@@ -50,6 +54,15 @@ public class TwitterClient extends OAuthBaseClient {
     public void getMyInfo(AsyncHttpResponseHandler handler) {
     	String url = getApiUrl("account/verify_credentials.json");
 		client.get(url, null, handler);
+	}
+    
+    public void getUserInfo(long id, AsyncHttpResponseHandler handler) {
+    	String url = getApiUrl("statuses/show.json" + "?id="+String.valueOf(id));
+//    	Log.d("DEBUG", url);
+//      RequestParams params = new RequestParams();
+//      params.put("id", String.valueOf(id));
+//		client.get(url, params, handler);
+    	client.get(url,  null, handler);
 	}
     
     public void getUserTimeline(AsyncHttpResponseHandler handler) {
