@@ -13,16 +13,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ProfileActivity extends FragmentActivity {
-
+	String screen_name;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_profile);
+		screen_name = getIntent().getStringExtra("screen_name");
 		loadProfileInfo();
 	}
 
 	private void loadProfileInfo() {
-		TwitterClientApp.getRestClient().getMyInfo(new JsonHttpResponseHandler() {
+		TwitterClientApp.getRestClient().getUserInfo(screen_name, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONObject json) {
 				User u = User.fromJson(json);
@@ -30,6 +32,10 @@ public class ProfileActivity extends FragmentActivity {
 				populateProfileHeader(u);
 			}
 		});
+	}
+	
+	public String getScreenName() {
+		return screen_name;
 	}
 
 	private void populateProfileHeader(User u) {

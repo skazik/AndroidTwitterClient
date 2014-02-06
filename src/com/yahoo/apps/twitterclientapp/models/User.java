@@ -11,8 +11,8 @@ public class User extends BaseModel {
 		return getLong("id");
 	}
 	
-	public String getIdStr() {
-		return getString("id_str");
+	public String getUserName() {
+		return getStringUser("screen_name");
 	}
 	
 	public String getScreenName() {

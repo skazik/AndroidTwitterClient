@@ -6,12 +6,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.yahoo.apps.twitterclientapp.ProfileActivity;
 import com.yahoo.apps.twitterclientapp.R;
+import com.yahoo.apps.twitterclientapp.TimelineActivity;
 import com.yahoo.apps.twitterclientapp.TweetsAdapter;
 import com.yahoo.apps.twitterclientapp.TwitterClientApp;
 import com.yahoo.apps.twitterclientapp.models.Tweet;
 import com.yahoo.apps.twitterclientapp.models.User;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -42,7 +45,9 @@ public class TweetsListFragment extends Fragment {
 		lvItems = (ListView) getActivity().findViewById(R.id.lvTweets);
 		twAdapter = new TweetsAdapter(getActivity(), tweets);
 		lvItems.setAdapter(twAdapter);
-		setupListViewListener();
+		if (getActivity().findViewById(R.id.ivProfile) == null) {
+			setupListViewListener();
+		}
 	}
 	
 	public TweetsAdapter getAdapter() {
@@ -54,13 +59,17 @@ public class TweetsListFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long rowId) {
 				//Log.d("DEBUG", "got click on " + tweets.get(position).getId()); 
-				TwitterClientApp.getRestClient().getUserInfo(tweets.get(position).getId(),
+				TwitterClientApp.getRestClient().getUserStatuses(tweets.get(position).getId(),
 						new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(JSONObject json) {
 						// Log.d("DEBUG", json.toString());
 						User u = User.fromJson(json);
-						Log.d("DEBUG", "got click on " + u.getName() + "_" + u.getScreenName());
+						// Log.d("DEBUG", "got click on " + u.getUserName());
+						
+						// very dirty trick - need to send event and listen in proper activity 
+						TimelineActivity tla = (TimelineActivity) getActivity();
+						tla.onUserProfile(u.getUserName());
 					}
 				});
 			}

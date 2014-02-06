@@ -18,6 +18,23 @@ public class BaseModel {
             return null;
         }
     }
+    
+    protected String getStringUser(String name) {
+		String jString = getString("user");
+		JSONObject jobj;
+        try {
+        	jobj = new JSONObject(jString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        try {
+            return jobj.getString(name);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
  
     protected long getLong(String name) {
         try {
